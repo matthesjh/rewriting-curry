@@ -1,0 +1,43 @@
+{
+  "name": "rewriting",
+  "version": "0.0.0",
+  "synopsis": "Libraries for term rewriting and narrowing",
+  "author": "Jan-Hendrik Matthes",
+  "description": "These libraries provide a representation of first-order terms and various notions of term rewriting, like positions, substitution, unification, critical pairs, etc. Moreover, it defines also operations for rewriting and narrowing strategies and a representation of definitional trees. A previous version of these libraries was part of the PAKCS/KiCS2 distributions.",
+  "category": [
+    "Narrowing",
+    "Rewriting",
+    "Substitution",
+    "Unification"
+  ],
+  "homepage": "https://github.com/matthesjh/rewriting-curry",
+  "repository": "https://github.com/matthesjh/rewriting-curry.git",
+  "bugReports": "https://github.com/matthesjh/rewriting-curry/issues",
+  "license": "BSD-3-Clause",
+  "licenseFile": "LICENSE.md",
+  "dependencies": {
+    "abstract-curry": ">=2.0.0, <3.0.0",
+    "base": ">=1.0.0, <2.0.0",
+    "finite-map": ">=0.0.1, <0.0.2"
+  },
+  "compilerCompatibility": {
+    "kics2": ">=2.0.0, <3.0.0",
+    "pakcs": ">=2.0.0, <3.0.0"
+  },
+  "exportedModules": [
+    "Rewriting.CriticalPairs",
+    "Rewriting.DefinitionalTree",
+    "Rewriting.Files",
+    "Rewriting.Narrowing",
+    "Rewriting.Position",
+    "Rewriting.Rules",
+    "Rewriting.Strategy",
+    "Rewriting.Substitution",
+    "Rewriting.Term",
+    "Rewriting.Unification"
+  ],
+  "source": {
+    "git": "https://github.com/matthesjh/rewriting-curry.git",
+    "tag": "$version"
+  }
+}
