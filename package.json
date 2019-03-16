@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "synopsis": "Libraries for term rewriting and narrowing",
   "author": "Jan-Hendrik Matthes",
-  "description": "These libraries provide a representation of first-order terms and various notions of term rewriting, like positions, substitution, unification, critical pairs, etc. Moreover, it defines also operations for rewriting and narrowing strategies and a representation of definitional trees. A previous version of these libraries was part of the PAKCS/KiCS2 distributions.",
+  "description": "This package provides a representation of first-order terms and various notions of term rewriting, like positions, substitution, unification, critical pairs, etc. Moreover, it defines also operations for rewriting and narrowing strategies and a representation of definitional trees. A previous version of the contained libraries was part of the PAKCS/KiCS2 distributions.",
   "category": [
     "Narrowing",
     "Rewriting",
