@@ -4,4 +4,4 @@ This package provides a representation of first-order terms and various notions 
 
 The libraries were developed as part of a bachelor's thesis.
 
-**Note:** A previous version of the contained libraries was part of the KiCS2/PAKCS distributions.
+**Note:** A previous version of the contained libraries was part of the [KiCS2](https://www-ps.informatik.uni-kiel.de/kics2/)/[PAKCS](https://www.informatik.uni-kiel.de/~pakcs/) distributions.
