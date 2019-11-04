@@ -3,7 +3,7 @@
 --- representation of the reduction strategy phi.
 ---
 --- @author Jan-Hendrik Matthes
---- @version August 2016
+--- @version November 2019
 --- @category algorithm
 ------------------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ module Rewriting.DefinitionalTree
 
 import Function (on, both)
 import List
-import Maybe (listToMaybe, catMaybes)
+import Maybe (catMaybes, listToMaybe, mapMaybe)
 import Rewriting.Position (Pos, eps, positions, (.>), (|>), replaceTerm)
 import Rewriting.Rules
 import Rewriting.Strategy (RStrategy)
@@ -153,7 +153,9 @@ mkOr _ _   ([], [])               = Nothing
 mkOr v pat ([], rs2@(_:_))        = let mdts = map (mkLeaf v pat) rs2
                                      in Just (Or pat (catMaybes mdts))
 mkOr v pat (rs1@(_:_), [])
-  = defTreesS' v rs1 (intersect (idtPositions rs1) (varPositions pat)) pat
+  = case intersect (idtPositions rs1) (varPositions pat) of
+      [] -> Just (Or pat (mapMaybe (mkLeaf v pat) rs1))
+      ps -> defTreesS' v rs1 ps pat
 mkOr v pat (rs1@(_:_), rs2@(_:_))
   = let vps = varPositions pat
         mdts = [defTreesS' v rs (intersect (idtPositions rs) vps) pat |
