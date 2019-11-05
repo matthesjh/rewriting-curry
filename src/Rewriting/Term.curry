@@ -1,4 +1,4 @@
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 --- Library for representation of first-order terms.
 ---
 --- This library is the basis of other libraries for the manipulation of
@@ -6,9 +6,9 @@
 --- also defines other structures, like term equations.
 ---
 --- @author Jan-Hendrik Matthes
---- @version November 2018
+--- @version November 2019
 --- @category algorithm
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 module Rewriting.Term
   ( VarIdx, Term (..), TermEq, TermEqs
@@ -24,9 +24,9 @@ import Maybe     ( fromMaybe )
 
 import Data.FiniteMap ( listToFM, lookupFM )
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Representation of first-order terms and term equations
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- A variable represented as an integer greater than or equal to zero.
 type VarIdx = Int
@@ -48,9 +48,9 @@ type TermEq f = (Term f, Term f)
 --- parameterized over the kind of function symbols, e.g., strings.
 type TermEqs f = [TermEq f]
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Pretty-printing of first-order terms and term equations
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Transforms a variable into a string representation.
 showVarIdx :: VarIdx -> String
@@ -85,9 +85,9 @@ showTermEq s (l, r) = (showTerm s l) ++ " = " ++ (showTerm s r)
 showTermEqs :: (f -> String) -> TermEqs f -> String
 showTermEqs s = unlines . (map (showTermEq s))
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Functions for first-order terms
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Returns a term with the given constructor and no argument terms.
 tConst :: f -> Term f
@@ -190,9 +190,9 @@ eqConsPattern (TermCons _ _)    (TermVar _)       = False
 eqConsPattern (TermCons c1 ts1) (TermCons c2 ts2) =
   c1 == c2 && length ts1 == length ts2
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Definition of helper functions
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Encloses a string in parenthesis if the given condition is true.
 parensIf :: Bool -> String -> String

@@ -1,11 +1,11 @@
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 --- Library for representation and computation of narrowings on first-order
 --- terms and representation of narrowing strategies.
 ---
 --- @author Jan-Hendrik Matthes
---- @version November 2016
+--- @version November 2019
 --- @category algorithm
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 module Rewriting.Narrowing
   ( NStrategy, Narrowing (..), NarrowingTree (..), NOptions (..)
@@ -28,9 +28,9 @@ import Rewriting.Term
 import Rewriting.Unification (UnificationError (..), unify, unifiable)
 import State
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Representation of narrowing strategies
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- A narrowing strategy represented as a function that takes a term rewriting
 --- system and a term and returns a list of triples consisting of a position,
@@ -38,9 +38,9 @@ import State
 --- symbols, e.g., strings.
 type NStrategy f = TRS f -> Term f -> [(Pos, Rule f, Subst f)]
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Representation of narrowings on first-order terms
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Representation of a narrowing on first-order terms, parameterized over the
 --- kind of function symbols, e.g., strings.
@@ -50,9 +50,9 @@ type NStrategy f = TRS f -> Term f -> [(Pos, Rule f, Subst f)]
 ---                         substitution `sub` to narrowing `n`.
 data Narrowing f = NTerm (Term f) | NStep (Term f) Pos (Subst f) (Narrowing f)
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Representation of narrowing trees for first-order terms
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Representation of a narrowing tree for first-order terms, parameterized
 --- over the kind of function symbols, e.g., strings.
@@ -61,9 +61,9 @@ data Narrowing f = NTerm (Term f) | NStep (Term f) Pos (Subst f) (Narrowing f)
 ---                    narrowing steps `ns`.
 data NarrowingTree f = NTree (Term f) [(Pos, Subst f, NarrowingTree f)]
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Representation of narrowing options for solving term equations
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Representation of narrowing options for solving term equations,
 --- parameterized over the kind of function symbols, e.g., strings.
@@ -77,9 +77,9 @@ data NOptions f = NOptions { normalize :: Bool, rStrategy :: RStrategy f }
 defaultNOptions :: Eq f => NOptions f
 defaultNOptions = NOptions { normalize = False, rStrategy = poRStrategy }
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Pretty-printing of narrowings on first-order terms
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 -- \x2192 = RIGHTWARDS ARROW
 
@@ -91,9 +91,9 @@ showNarrowing s (NStep t p sub n)
       ++ (showSubst s (restrictSubst sub (tVars t))) ++ "] "
       ++ (showNarrowing s n)
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Definition of common narrowing strategies
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- The standard narrowing strategy.
 stdNStrategy :: Eq f => NStrategy f
@@ -178,9 +178,9 @@ wnNStrategy' dts v t (Branch pat p dts')
                                 in unifiable [(t, dtp)])
 wnNStrategy' dts v t (Or _ dts') = concatMap (wnNStrategy' dts v t) dts'
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Functions for narrowings on first-order terms
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Narrows a term with the given strategy and term rewriting system by the
 --- given number of steps.
@@ -336,9 +336,9 @@ solveEq' opts v sub s trs t@(TermCons _ ts)
                    vs@(_:_) -> (maximum vs) + 1
          in solveEq' opts v' (composeSubst rsub' sub) s trs t'
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Graphical representation of narrowing trees
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- A node represented as a pair of an integer and a term and parameterized
 --- over the kind of function symbols, e.g., strings.

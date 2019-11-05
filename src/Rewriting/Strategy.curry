@@ -1,11 +1,11 @@
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 --- Library for representation and computation of reductions on first-order
 --- terms and representation of reduction strategies.
 ---
 --- @author Jan-Hendrik Matthes
---- @version November 2016
+--- @version November 2019
 --- @category algorithm
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 module Rewriting.Strategy
   ( RStrategy, Reduction (..)
@@ -22,18 +22,18 @@ import Rewriting.Substitution (applySubst)
 import Rewriting.Term (Term, showTerm, maxVarInTerm)
 import Rewriting.Unification (unify)
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Representation of reduction strategies
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- A reduction strategy represented as a function that takes a term rewriting
 --- system and a term and returns the redex positions where the term should be
 --- reduced, parameterized over the kind of function symbols, e.g., strings.
 type RStrategy f = TRS f -> Term f -> [Pos]
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Representation of reductions on first-order terms
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Representation of a reduction on first-order terms, parameterized over the
 --- kind of function symbols, e.g., strings.
@@ -43,9 +43,9 @@ type RStrategy f = TRS f -> Term f -> [Pos]
 ---                      reduction `r`.
 data Reduction f = NormalForm (Term f) | RStep (Term f) [Pos] (Reduction f)
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Pretty-printing of reductions on first-order terms
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 -- \x2192 = RIGHTWARDS ARROW
 
@@ -56,9 +56,9 @@ showReduction s (RStep t ps r) = (showTerm s t) ++ "\n\x2192" ++ "["
                                    ++ (intercalate "," (map showPos ps))
                                    ++ "] " ++ (showReduction s r)
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Functions for definition of reduction strategies
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Returns the redex positions of a term according to the given term
 --- rewriting system.
@@ -89,9 +89,9 @@ parRStrategy cmp trs t = case redexes trs t of
     s :: Pos -> Pos -> Bool
     s p q = (cmp p q) /= GT
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Definition of common reduction strategies
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- The leftmost innermost reduction strategy.
 liRStrategy :: Eq f => RStrategy f
@@ -153,9 +153,9 @@ poRStrategy = parRStrategy poOrder
                 | below p q = GT
                 | otherwise = EQ
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Functions for reductions on first-order terms
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Reduces a term with the given strategy and term rewriting system.
 reduce :: Eq f => RStrategy f -> TRS f -> Term f -> Term f

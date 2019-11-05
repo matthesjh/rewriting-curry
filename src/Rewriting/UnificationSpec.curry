@@ -1,4 +1,4 @@
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 --- Library for specifying the unification on first-order terms.
 ---
 --- This library implements a general unification algorithm. Because the
@@ -7,9 +7,9 @@
 ---
 --- @author Michael Hanus, Jan-Hendrik Matthes, Jonas Oberschweiber,
 ---         Bjoern Peemoeller
---- @version August 2016
+--- @version November 2019
 --- @category algorithm
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 module Rewriting.UnificationSpec
   ( UnificationError (..)
@@ -21,9 +21,9 @@ import Function (both)
 import Rewriting.Substitution (Subst, emptySubst, extendSubst)
 import Rewriting.Term
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Representation of unification errors
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Representation of a unification error, parameterized over the kind of
 --- function symbols, e.g., strings.
@@ -35,9 +35,9 @@ import Rewriting.Term
 ---                        term `t` in which it occurs as a subterm.
 data UnificationError f = Clash (Term f) (Term f) | OccurCheck VarIdx (Term f)
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Pretty-printing of unification errors
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Transforms a unification error into a string representation.
 showUnificationError :: (f -> String) -> UnificationError f -> String
@@ -48,9 +48,9 @@ showUnificationError s (OccurCheck v t) = "OccurCheck: " ++ (showVarIdx v)
                                             ++ " occurs in " ++ (showTerm s t)
                                             ++ "."
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Functions for unification on first-order terms
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Unifies a list of term equations. Returns either a unification error or a
 --- substitution.

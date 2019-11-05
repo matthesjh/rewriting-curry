@@ -1,11 +1,11 @@
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 --- Library for representation and computation of definitional trees and
 --- representation of the reduction strategy phi.
 ---
 --- @author Jan-Hendrik Matthes
 --- @version November 2019
 --- @category algorithm
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 module Rewriting.DefinitionalTree
   ( DefTree (..)
@@ -24,9 +24,9 @@ import Rewriting.Term
 import Rewriting.Unification (unify, unifiable)
 import State
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Representation of definitional trees
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Representation of a definitional tree, parameterized over the kind of
 --- function symbols, e.g., strings.
@@ -40,9 +40,9 @@ data DefTree f = Leaf (Rule f)
                | Branch (Term f) Pos [DefTree f]
                | Or (Term f) [DefTree f]
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Functions for definitional trees
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Returns the root symbol (variable or constructor) of a definitional tree.
 dtRoot :: DefTree f -> Either VarIdx f
@@ -168,9 +168,9 @@ varPositions (TermVar _)     = []
 varPositions (TermCons _ ts) = [[i] | i <- [1..(length ts)],
                                       isVarTerm (ts !! (i - 1))]
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Functions for the reduction strategy phi
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Returns the position and the definitional trees from the given list of
 --- definitional trees for the leftmost outermost defined constructor in a
@@ -223,9 +223,9 @@ phiRStrategy' n dts t@(TermCons _ _) (Branch _ p dts')
                         (Just p') -> Just (p .> p')
 phiRStrategy' _ _   _                (Or _ _)          = Nothing
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Graphical representation of definitional trees
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- A node represented as a tuple of an integer, a possible inductive position
 --- and a term and parameterized over the kind of function symbols, e.g.,
@@ -320,9 +320,9 @@ dotifyDefTree s dt = "digraph DefinitionalTree {\n\t"
 writeDefTree :: (f -> String) -> DefTree f -> String -> IO ()
 writeDefTree s dt fn = writeFile fn (dotifyDefTree s dt)
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Definition of helper functions
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Encloses a string in parenthesis if the given condition is true.
 parensIf :: Bool -> String -> String

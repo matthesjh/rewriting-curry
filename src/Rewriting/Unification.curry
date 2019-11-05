@@ -1,13 +1,13 @@
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 --- Library for representation of unification on first-order terms.
 ---
 --- This library implements a unification algorithm using reference tables.
 ---
 --- @author Michael Hanus, Jan-Hendrik Matthes, Jonas Oberschweiber,
 ---         Bjoern Peemoeller
---- @version August 2016
+--- @version November 2019
 --- @category algorithm
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 module Rewriting.Unification
   ( UnificationError (..)
@@ -22,9 +22,9 @@ import Rewriting.Substitution (Subst, emptySubst, extendSubst)
 import Rewriting.Term (VarIdx, Term (..), TermEq, TermEqs)
 import Rewriting.UnificationSpec (UnificationError (..), showUnificationError)
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Representation of internal data structures
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- An `RTerm` is the unification algorithm's internal term representation.
 --- Its `RTermVar` and `RTermCons` constructors are similar to the `TermVar`
@@ -47,9 +47,9 @@ type REq f = (RTerm f, RTerm f)
 --- parameterized over the kind of function symbols, e.g., strings.
 type REqs f = [REq f]
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Definition of exported functions
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Unifies a list of term equations. Returns either a unification error or a
 --- substitution.
@@ -63,9 +63,9 @@ unify eqs = let (rt, reqs) = termEqsToREqs eqs
 unifiable :: Eq f => TermEqs f -> Bool
 unifiable = isRight . unify
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Conversion to internal structure
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Converts a list of term equations into a list of `RTerm` equations and
 --- places references into a fresh reference table.
@@ -87,9 +87,9 @@ termToRTerm rt (TermVar v)     = (addToFM rt v (RTermVar v), Ref v)
 termToRTerm rt (TermCons c ts) = let (rt', ts') = mapAccumL termToRTerm rt ts
                                   in (rt', RTermCons c ts')
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Conversion from internal structure
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Converts a list of `RTerm` equations to a substitution by turning every
 --- equation of the form `(RTermVar v, t)` or `(t, RTermVar v)` into a mapping
@@ -127,9 +127,9 @@ deref rt (Ref i)           = case lookupFM rt i of
 deref _  t@(RTermVar _)    = t
 deref _  t@(RTermCons _ _) = t
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Unification algorithm
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Internal unification function, the core of the algorithm.
 unify' :: Eq f => RefTable f -> REqs f -> REqs f

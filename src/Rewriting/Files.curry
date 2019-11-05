@@ -1,12 +1,12 @@
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 --- Library to read and transform a curry program into an equivalent
 --- representation, where every function gets assigned the corresponding term
 --- rewriting system and every type has a corresponding type declaration.
 ---
 --- @author Jan-Hendrik Matthes
---- @version October 2016
+--- @version November 2019
 --- @category algorithm
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 module Rewriting.Files
   ( TRSData, TypeData, RWData
@@ -22,9 +22,9 @@ import Rewriting.Rules (Rule, TRS, rCons)
 import Rewriting.Substitution
 import Rewriting.Term (Term (..), tConst)
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Representation of term rewriting system data and type data
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Mappings from a function name to the corresponding term rewriting system
 --- represented as a finite map from qualified names to term rewriting
@@ -37,9 +37,9 @@ type TypeData = [CTypeDecl]
 --- Representation of term rewriting system data and type data as a pair.
 type RWData = (TRSData, TypeData)
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Pretty-printing and reading of qualified names
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Transforms a qualified name into a string representation.
 showQName :: QName -> String
@@ -52,9 +52,9 @@ readQName s = case break (== '.') s of
                 qn@(_, []) -> qn
                 (mn, _:fn) -> (mn, fn)
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Functions for transforming (abstract) curry programs
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Returns the qualified name for an `if-then-else`-constructor.
 condQName :: QName
@@ -165,9 +165,9 @@ fromExpr fn (CTyped e _)     = fromExpr fn e
 fromExpr fn (CRecConstr _ _) = error (pError "fromExpr" "CRecConstr" fn)
 fromExpr fn (CRecUpdate _ _) = error (pError "fromExpr" "CRecUpdate" fn)
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Definition of helper functions
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Error message for the given function and the feature, that is not
 --- supported within the given abstract curry function.

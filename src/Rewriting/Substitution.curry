@@ -1,10 +1,10 @@
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 --- Library for representation of substitutions on first-order terms.
 ---
 --- @author Jan-Hendrik Matthes
---- @version August 2016
+--- @version November 2019
 --- @category algorithm
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 module Rewriting.Substitution
   ( Subst
@@ -19,17 +19,17 @@ import Maybe (fromMaybe)
 import Data.FiniteMap
 import Rewriting.Term
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Representation of substitutions on first-order terms
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- A substitution represented as a finite map from variables to terms and
 --- parameterized over the kind of function symbols, e.g., strings.
 type Subst f = FM VarIdx (Term f)
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Pretty-printing of substitutions on first-order terms
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 -- \x21a6 = RIGHTWARDS ARROW FROM BAR
 
@@ -40,9 +40,9 @@ showSubst s sub = "{" ++ (intercalate "," (map showMapping (fmToList sub)))
   where
     showMapping (v, t) = (showVarIdx v) ++ " \x21a6 " ++ (showTerm s t)
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Functions for substitutions on first-order terms
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- The irreflexive order predicate of a substitution.
 substOrder :: VarIdx -> VarIdx -> Bool

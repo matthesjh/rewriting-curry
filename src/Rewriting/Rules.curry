@@ -1,10 +1,10 @@
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 --- Library for representation of rules and term rewriting systems.
 ---
 --- @author Jan-Hendrik Matthes
---- @version November 2016
+--- @version November 2019
 --- @category algorithm
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 module Rewriting.Rules
   ( Rule, TRS
@@ -20,9 +20,9 @@ import Maybe (mapMaybe)
 import Rewriting.Substitution (listToSubst, applySubst)
 import Rewriting.Term
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Representation of rules and term rewriting systems
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- A rule represented as a pair of terms and parameterized over the kind of
 --- function symbols, e.g., strings.
@@ -32,9 +32,9 @@ type Rule f = (Term f, Term f)
 --- over the kind of function symbols, e.g., strings.
 type TRS f = [Rule f]
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Pretty-printing of rules and term rewriting systems
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 -- \x2192 = RIGHTWARDS ARROW
 
@@ -46,9 +46,9 @@ showRule s (l, r) = (showTerm s l) ++ " \x2192 " ++ (showTerm s r)
 showTRS :: (f -> String) -> TRS f -> String
 showTRS s = unlines . (map (showRule s))
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Functions for rules and term rewriting systems
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Returns the root symbol (variable or constructor) of a rule.
 rRoot :: Rule f -> Either VarIdx f

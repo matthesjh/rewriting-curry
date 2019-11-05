@@ -1,10 +1,10 @@
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 --- Library for representation and computation of critical pairs.
 ---
 --- @author Jan-Hendrik Matthes
---- @version August 2016
+--- @version November 2019
 --- @category algorithm
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 module Rewriting.CriticalPairs
   ( CPair
@@ -18,17 +18,17 @@ import Rewriting.Substitution (applySubst)
 import Rewriting.Term (Term, showTerm, isConsTerm)
 import Rewriting.Unification (unify)
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Representation of critical pairs
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- A critical pair represented as a pair of terms and parameterized over the
 --- kind of function symbols, e.g., strings.
 type CPair f = (Term f, Term f)
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Pretty-printing of critical pairs
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 -- \x3008 = LEFT ANGLE BRACKET
 -- \x3009 = RIGHT ANGLE BRACKET
@@ -42,9 +42,9 @@ showCPair s (l, r) = "\x3008" ++ (showTerm s l) ++ ", " ++ (showTerm s r)
 showCPairs :: (f -> String) -> [CPair f] -> String
 showCPairs s = unlines . (map (showCPair s))
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Computation of critical pairs
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Returns the critical pairs of a term rewriting system.
 cPairs :: Eq f => TRS f -> [CPair f]
@@ -58,9 +58,9 @@ cPairs trs
              (Right sub) <- [unify [(l1p, l2)]],
              (p /= eps) || (not (isVariantOf rule1 rule2))]
 
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 -- Functions for term rewriting systems and critical pairs
--- ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 --- Checks whether a term rewriting system is orthogonal.
 isOrthogonal :: Eq f => TRS f -> Bool
