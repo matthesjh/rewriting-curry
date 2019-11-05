@@ -149,9 +149,8 @@ mkLeaf v pat r
 --- such definitional tree exists. Only the rules in the first term rewriting
 --- system of the pair have a demanded first argument position.
 mkOr :: Eq f => VarIdx -> Term f -> (TRS f, TRS f) -> Maybe (DefTree f)
-mkOr _ _   ([], [])               = Nothing
-mkOr v pat ([], rs2@(_:_))        = let mdts = map (mkLeaf v pat) rs2
-                                     in Just (Or pat (catMaybes mdts))
+mkOr _ _   ([], [])        = Nothing
+mkOr v pat ([], rs2@(_:_)) = Just (Or pat (mapMaybe (mkLeaf v pat) rs2))
 mkOr v pat (rs1@(_:_), [])
   = case intersect (idtPositions rs1) (varPositions pat) of
       [] -> Just (Or pat (mapMaybe (mkLeaf v pat) rs1))
