@@ -12,11 +12,11 @@ module Rewriting.Substitution
   , applySubstEq, applySubstEqs, restrictSubst, composeSubst
   ) where
 
-import Function (both)
-import List (intercalate)
-import Maybe (fromMaybe)
-
 import Data.FiniteMap
+import Function       (both)
+import List           (intercalate)
+import Maybe          (fromMaybe)
+
 import Rewriting.Term
 
 -- -----------------------------------------------------------------------------

@@ -15,18 +15,18 @@ module Rewriting.Narrowing
   , dotifyNarrowingTree, writeNarrowingTree
   ) where
 
-import Maybe (fromMaybe, mapMaybe)
-import List (maximum)
+import Data.FiniteMap             (eltsFM)
+import List                       (maximum)
+import Maybe                      (fromMaybe, mapMaybe)
+import State
 
-import Data.FiniteMap (eltsFM)
 import Rewriting.DefinitionalTree
 import Rewriting.Position
 import Rewriting.Rules
-import Rewriting.Strategy (RStrategy, poRStrategy, reduce)
+import Rewriting.Strategy         (RStrategy, poRStrategy, reduce)
 import Rewriting.Substitution
 import Rewriting.Term
-import Rewriting.Unification (UnificationError (..), unify, unifiable)
-import State
+import Rewriting.Unification      (UnificationError (..), unifiable, unify)
 
 -- -----------------------------------------------------------------------------
 -- Representation of narrowing strategies

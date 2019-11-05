@@ -13,16 +13,17 @@ module Rewriting.DefinitionalTree
   , defTrees, defTreesL, loDefTrees, phiRStrategy, dotifyDefTree, writeDefTree
   ) where
 
-import Function (on, both)
+import Function               (both, on)
 import List
-import Maybe (catMaybes, listToMaybe, mapMaybe)
-import Rewriting.Position (Pos, eps, positions, (.>), (|>), replaceTerm)
+import Maybe                  (catMaybes, listToMaybe, mapMaybe)
+import State
+
+import Rewriting.Position     (Pos, eps, positions, replaceTerm, (.>), (|>))
 import Rewriting.Rules
-import Rewriting.Strategy (RStrategy)
+import Rewriting.Strategy     (RStrategy)
 import Rewriting.Substitution (applySubst)
 import Rewriting.Term
-import Rewriting.Unification (unify, unifiable)
-import State
+import Rewriting.Unification  (unifiable, unify)
 
 -- -----------------------------------------------------------------------------
 -- Representation of definitional trees

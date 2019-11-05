@@ -14,10 +14,11 @@ module Rewriting.Rules
   , isConsBased, isDemandedAt
   ) where
 
-import Function (on, both)
-import List (union, maximum, minimum)
-import Maybe (mapMaybe)
-import Rewriting.Substitution (listToSubst, applySubst)
+import Function               (both, on)
+import List                   (maximum, minimum, union)
+import Maybe                  (mapMaybe)
+
+import Rewriting.Substitution (applySubst, listToSubst)
 import Rewriting.Term
 
 -- -----------------------------------------------------------------------------

@@ -18,11 +18,10 @@ module Rewriting.Term
   , mapTerm, eqConsPattern
   ) where
 
-import Char      ( isAlphaNum )
-import List      ( nub, intercalate, maximum, minimum )
-import Maybe     ( fromMaybe )
-
-import Data.FiniteMap ( listToFM, lookupFM )
+import Char           (isAlphaNum)
+import Data.FiniteMap (listToFM, lookupFM)
+import List           (intercalate, maximum, minimum, nub)
+import Maybe          (fromMaybe)
 
 -- -----------------------------------------------------------------------------
 -- Representation of first-order terms and term equations

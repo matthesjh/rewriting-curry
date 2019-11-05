@@ -14,13 +14,13 @@ module Rewriting.Files
   , fromFuncDecl, fromRule, fromLiteral, fromPattern, fromRhs, fromExpr
   ) where
 
-import AbstractCurry.Files (tryReadCurryFile)
+import AbstractCurry.Files    (tryReadCurryFile)
 import AbstractCurry.Types
-import Data.FiniteMap (FM, listToFM)
+import Data.FiniteMap         (FM, listToFM)
 
-import Rewriting.Rules (Rule, TRS, rCons)
+import Rewriting.Rules        (Rule, TRS, rCons)
 import Rewriting.Substitution
-import Rewriting.Term (Term (..), tConst)
+import Rewriting.Term         (Term (..), tConst)
 
 -- -----------------------------------------------------------------------------
 -- Representation of term rewriting system data and type data

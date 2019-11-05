@@ -11,12 +11,13 @@ module Rewriting.CriticalPairs
   , showCPair, showCPairs, cPairs, isOrthogonal, isWeakOrthogonal
   ) where
 
-import List (nub)
-import Rewriting.Position (eps, positions, (|>), replaceTerm)
+import List                   (nub)
+
+import Rewriting.Position     (eps, positions, replaceTerm, (|>))
 import Rewriting.Rules
 import Rewriting.Substitution (applySubst)
-import Rewriting.Term (Term, showTerm, isConsTerm)
-import Rewriting.Unification (unify)
+import Rewriting.Term         (Term, isConsTerm, showTerm)
+import Rewriting.Unification  (unify)
 
 -- -----------------------------------------------------------------------------
 -- Representation of critical pairs

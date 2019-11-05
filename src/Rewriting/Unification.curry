@@ -14,12 +14,12 @@ module Rewriting.Unification
   , showUnificationError, unify, unifiable
   ) where
 
-import Either (isRight)
-import List (mapAccumL)
+import Data.FiniteMap            (FM, addToFM, emptyFM, lookupFM)
+import Either                    (isRight)
+import List                      (mapAccumL)
 
-import Data.FiniteMap (FM, emptyFM, addToFM, lookupFM)
-import Rewriting.Substitution (Subst, emptySubst, extendSubst)
-import Rewriting.Term (VarIdx, Term (..), TermEq, TermEqs)
+import Rewriting.Substitution    (Subst, emptySubst, extendSubst)
+import Rewriting.Term            (Term (..), TermEq, TermEqs, VarIdx)
 import Rewriting.UnificationSpec (UnificationError (..), showUnificationError)
 
 -- -----------------------------------------------------------------------------

@@ -15,12 +15,13 @@ module Rewriting.Strategy
   , reductionBy, reductionByL
   ) where
 
-import List (nub, intercalate, groupBy, sortBy, minimumBy)
+import List                   (groupBy, intercalate, minimumBy, nub, sortBy)
+
 import Rewriting.Position
-import Rewriting.Rules (TRS, renameRuleVars, renameTRSVars)
+import Rewriting.Rules        (TRS, renameRuleVars, renameTRSVars)
 import Rewriting.Substitution (applySubst)
-import Rewriting.Term (Term, showTerm, maxVarInTerm)
-import Rewriting.Unification (unify)
+import Rewriting.Term         (Term, maxVarInTerm, showTerm)
+import Rewriting.Unification  (unify)
 
 -- -----------------------------------------------------------------------------
 -- Representation of reduction strategies
