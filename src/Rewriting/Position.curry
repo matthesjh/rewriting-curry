@@ -6,7 +6,7 @@
 --- @category algorithm
 --------------------------------------------------------------------------------
 
-{-# OPTIONS_CYMAKE -Wno-incomplete-patterns #-}
+{-# OPTIONS_FRONTEND -Wno-incomplete-patterns #-}
 
 module Rewriting.Position
   ( Pos
