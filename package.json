@@ -34,7 +34,8 @@
     "Rewriting.Strategy",
     "Rewriting.Substitution",
     "Rewriting.Term",
-    "Rewriting.Unification"
+    "Rewriting.Unification",
+    "Rewriting.UnificationSpec"
   ],
   "source": {
     "git": "https://github.com/matthesjh/rewriting-curry.git",
