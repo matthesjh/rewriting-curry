@@ -2,7 +2,7 @@
 --- Library for representation of substitutions on first-order terms.
 ---
 --- @author Jan-Hendrik Matthes
---- @version November 2019
+--- @version February 2020
 --- @category algorithm
 --------------------------------------------------------------------------------
 
@@ -35,10 +35,9 @@ type Subst f = FM VarIdx (Term f)
 
 --- Transforms a substitution into a string representation.
 showSubst :: (f -> String) -> Subst f -> String
-showSubst s sub = "{" ++ (intercalate "," (map showMapping (fmToList sub)))
-                    ++ "}"
+showSubst s sub = "{" ++ intercalate "," (map showMapping (fmToList sub)) ++ "}"
   where
-    showMapping (v, t) = (showVarIdx v) ++ " \x21a6 " ++ (showTerm s t)
+    showMapping (v, t) = showVarIdx v ++ " \x21a6 " ++ showTerm s t
 
 -- -----------------------------------------------------------------------------
 -- Functions for substitutions on first-order terms
@@ -85,12 +84,12 @@ applySubstEqs sub = map (applySubstEq sub)
 --- Returns a new substitution with only those mappings from the given
 --- substitution whose variable is in the given list of variables.
 restrictSubst :: Subst f -> [VarIdx] -> Subst f
-restrictSubst sub vs
-  = listToSubst [(v, t) | v <- vs, (Just t) <- [lookupSubst sub v]]
+restrictSubst sub vs =
+  listToSubst [(v, t) | v <- vs, Just t <- [lookupSubst sub v]]
 
---- Composes the first substitution `phi` with the second substitution
---- `sigma`. The resulting substitution `sub` fulfills the property
---- `sub(t) = phi(sigma(t))` for a term `t`. Mappings in the first
---- substitution shadow those in the second.
+--- Composes the first substitution `phi` with the second substitution `sigma`.
+--- The resulting substitution `sub` fulfills the property
+--- `sub(t) = phi(sigma(t))` for a term `t`. Mappings in the first substitution
+--- shadow those in the second.
 composeSubst :: Subst f -> Subst f -> Subst f
 composeSubst phi sigma = plusFM phi (mapFM (\_ t -> applySubst phi t) sigma)

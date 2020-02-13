@@ -2,11 +2,11 @@
 --- Library for representation of first-order terms.
 ---
 --- This library is the basis of other libraries for the manipulation of
---- first-order terms, e.g., unification of terms. Therefore, this library
---- also defines other structures, like term equations.
+--- first-order terms, e.g., unification of terms. Therefore, this library also
+--- defines other structures, like term equations.
 ---
 --- @author Jan-Hendrik Matthes
---- @version November 2019
+--- @version February 2020
 --- @category algorithm
 --------------------------------------------------------------------------------
 
@@ -14,8 +14,8 @@ module Rewriting.Term
   ( VarIdx, Term (..), TermEq, TermEqs
   , showVarIdx, showTerm, showTermEq, showTermEqs, tConst, tOp, tRoot, tCons
   , tConsAll, tVars, tVarsAll, isConsTerm, isVarTerm, isGround, isLinear
-  , isNormal, maxVarInTerm, minVarInTerm, normalizeTerm, renameTermVars
-  , mapTerm, eqConsPattern
+  , isNormal, maxVarInTerm, minVarInTerm, normalizeTerm, renameTermVars, mapTerm
+  , eqConsPattern
   ) where
 
 import Char           (isAlphaNum)
@@ -37,7 +37,7 @@ type VarIdx = Int
 --- @cons TermCons c ts - The constructor term with constructor `c` and
 ---                       argument terms `ts`.
 data Term f = TermVar VarIdx | TermCons f [Term f]
- deriving (Eq, Show)
+  deriving (Eq, Show)
 
 --- A term equation represented as a pair of terms and parameterized over the
 --- kind of function symbols, e.g., strings.
@@ -53,7 +53,7 @@ type TermEqs f = [TermEq f]
 
 --- Transforms a variable into a string representation.
 showVarIdx :: VarIdx -> String
-showVarIdx v | v >= 0    = if q == 0 then [c] else c:(show q)
+showVarIdx v | v >= 0    = if q == 0 then [c] else c : show q
              | otherwise = ""
   where
     (q, r) = divMod v 26
@@ -65,24 +65,24 @@ showTerm s = showTerm' False
   where
     showTerm' _ (TermVar v)     = showVarIdx v
     showTerm' b (TermCons c ts) = case ts of
-      []     -> cstr
-      [l, r] -> if any isAlphaNum cstr
-                  then prefixString -- no infix notation
-                  else parensIf b (showTerm' True l ++ " " ++ cstr ++ " " ++
-                                   showTerm' True r)
+      []     -> cStr
+      [l, r] -> if any isAlphaNum cStr
+                  then prefixString
+                  else parensIf b (showTerm' True l ++ " " ++ cStr ++ " "
+                                                    ++ showTerm' True r)
       _      -> prefixString
      where
-      cstr         = s c
-      prefixString = cstr ++ "("
-                          ++ intercalate "," (map (showTerm' False) ts) ++ ")"
+       cStr         = s c
+       prefixString = cStr ++ "("
+                           ++ intercalate "," (map (showTerm' False) ts) ++ ")"
 
 --- Transforms a term equation into a string representation.
 showTermEq :: (f -> String) -> TermEq f -> String
-showTermEq s (l, r) = (showTerm s l) ++ " = " ++ (showTerm s r)
+showTermEq s (l, r) = showTerm s l ++ " = " ++ showTerm s r
 
 --- Transforms a list of term equations into a string representation.
 showTermEqs :: (f -> String) -> TermEqs f -> String
-showTermEqs s = unlines . (map (showTermEq s))
+showTermEqs s = unlines . map (showTermEq s)
 
 -- -----------------------------------------------------------------------------
 -- Functions for first-order terms
@@ -92,8 +92,8 @@ showTermEqs s = unlines . (map (showTermEq s))
 tConst :: f -> Term f
 tConst c = TermCons c []
 
---- Returns an infix operator term with the given constructor and the given
---- left and right argument term.
+--- Returns an infix operator term with the given constructor and the given left
+--- and right argument term.
 tOp :: Term f -> f -> Term f -> Term f
 tOp l c r = TermCons c [l, r]
 
@@ -106,11 +106,11 @@ tRoot (TermCons c _) = Right c
 tCons :: Eq f => Term f -> [f]
 tCons = nub . tConsAll
 
---- Returns a list of all constructors in a term. The resulting list may
---- contain duplicates.
+--- Returns a list of all constructors in a term. The resulting list may contain
+--- duplicates.
 tConsAll :: Term f -> [f]
 tConsAll (TermVar _)     = []
-tConsAll (TermCons c ts) = c:(concatMap tConsAll ts)
+tConsAll (TermCons c ts) = c : concatMap tConsAll ts
 
 --- Returns a list without duplicates of all variables in a term.
 tVars :: Term _ -> [VarIdx]
@@ -143,10 +143,9 @@ isLinear = unique . tVarsAll
 isNormal :: Term _ -> Bool
 isNormal (TermVar _)         = True
 isNormal (TermCons _ [])     = True
-isNormal (TermCons c (t:ts))
-  = case t of
-      (TermVar _)    -> all isVarTerm ts
-      (TermCons _ _) -> (isNormal t) && (isNormal (TermCons c ts))
+isNormal (TermCons c (t:ts)) = case t of
+  TermVar _    -> all isVarTerm ts
+  TermCons _ _ -> isNormal t && isNormal (TermCons c ts)
 
 --- Returns the maximum variable in a term or `Nothing` if no variable exists.
 maxVarInTerm :: Term _ -> Maybe VarIdx
@@ -193,7 +192,7 @@ eqConsPattern (TermCons c1 ts1) (TermCons c2 ts2) =
 -- Definition of helper functions
 -- -----------------------------------------------------------------------------
 
---- Encloses a string in parenthesis if the given condition is true.
+--- Encloses a string in parentheses if the given condition is true.
 parensIf :: Bool -> String -> String
 parensIf b s = if b then "(" ++ s ++ ")" else s
 

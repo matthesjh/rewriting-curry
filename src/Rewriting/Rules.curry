@@ -2,7 +2,7 @@
 --- Library for representation of rules and term rewriting systems.
 ---
 --- @author Jan-Hendrik Matthes
---- @version November 2019
+--- @version February 2020
 --- @category algorithm
 --------------------------------------------------------------------------------
 
@@ -41,11 +41,11 @@ type TRS f = [Rule f]
 
 --- Transforms a rule into a string representation.
 showRule :: (f -> String) -> Rule f -> String
-showRule s (l, r) = (showTerm s l) ++ " \x2192 " ++ (showTerm s r)
+showRule s (l, r) = showTerm s l ++ " \x2192 " ++ showTerm s r
 
 --- Transforms a term rewriting system into a string representation.
 showTRS :: (f -> String) -> TRS f -> String
-showTRS s = unlines . (map (showRule s))
+showTRS s = unlines . map (showRule s)
 
 -- -----------------------------------------------------------------------------
 -- Functions for rules and term rewriting systems
@@ -53,7 +53,7 @@ showTRS s = unlines . (map (showRule s))
 
 --- Returns the root symbol (variable or constructor) of a rule.
 rRoot :: Rule f -> Either VarIdx f
-rRoot (l, _) = tRoot l
+rRoot = tRoot . fst
 
 --- Returns a list without duplicates of all constructors in a rule.
 rCons :: Eq f => Rule f -> [f]
@@ -61,15 +61,15 @@ rCons (l, r) = union (tCons l) (tCons r)
 
 --- Returns a list without duplicates of all variables in a rule.
 rVars :: Rule _ -> [VarIdx]
-rVars (l, _) = tVars l
+rVars = tVars . fst
 
 --- Returns the maximum variable in a rule or `Nothing` if no variable exists.
 maxVarInRule :: Rule _ -> Maybe VarIdx
-maxVarInRule (l, _) = maxVarInTerm l
+maxVarInRule = maxVarInTerm . fst
 
 --- Returns the minimum variable in a rule or `Nothing` if no variable exists.
 minVarInRule :: Rule _ -> Maybe VarIdx
-minVarInRule (l, _) = minVarInTerm l
+minVarInRule = minVarInTerm . fst
 
 --- Returns the maximum variable in a term rewriting system or `Nothing` if no
 --- variable exists.
@@ -89,8 +89,8 @@ minVarInTRS trs = case mapMaybe minVarInRule trs of
 renameRuleVars :: Int -> Rule f -> Rule f
 renameRuleVars i = both (renameTermVars i)
 
---- Renames the variables in every rule of a term rewriting system by the
---- given number.
+--- Renames the variables in every rule of a term rewriting system by the given
+--- number.
 renameTRSVars :: Int -> TRS f -> TRS f
 renameTRSVars i = map (renameRuleVars i)
 
@@ -117,28 +117,28 @@ isLeftLinear = all (isLinear . fst)
 isLeftNormal :: TRS _ -> Bool
 isLeftNormal = all (isNormal . fst)
 
---- Checks whether a term is reducible with some rule
---- of the given term rewriting system.
+--- Checks whether a term is reducible with some rule of the given term
+--- rewriting system.
 isRedex :: Eq f => TRS f -> Term f -> Bool
-isRedex trs t = any ((eqConsPattern t) . fst) trs
+isRedex trs t = any (eqConsPattern t . fst) trs
 
---- Checks whether a term is a pattern, i.e., an root-reducible term
---- where the argaccording to the given term rewriting
---- system.
+--- Checks whether a term is a pattern, i.e., a root-reducible term according to
+--- the given term rewriting system.
 isPattern :: Eq f => TRS f -> Term f -> Bool
 isPattern _   (TermVar _)       = False
 isPattern trs t@(TermCons _ ts) = isRedex trs t && all isVarOrCons ts
- where
-  isVarOrCons (TermVar _)         = True
-  isVarOrCons t'@(TermCons _ ts') = not (isRedex trs t') && all isVarOrCons ts'
+  where
+    isVarOrCons (TermVar _)         = True
+    isVarOrCons t'@(TermCons _ ts') =
+      not (isRedex trs t') && all isVarOrCons ts'
 
 --- Checks whether a term rewriting system is constructor-based.
 isConsBased :: Eq f => TRS f -> Bool
-isConsBased trs = all ((isPattern trs) . fst) trs
+isConsBased trs = all (isPattern trs . fst) trs
 
 --- Checks whether the given argument position of a rule is demanded. Returns
 --- `True` if the corresponding argument term is a constructor term.
 isDemandedAt :: Int -> Rule _ -> Bool
 isDemandedAt _ (TermVar _, _)     = False
-isDemandedAt i (TermCons _ ts, _) = (i > 0) && (i <= (length ts))
-                                      && (isConsTerm (ts !! (i - 1)))
+isDemandedAt i (TermCons _ ts, _) =
+  i > 0 && i <= length ts && isConsTerm (ts !! (i - 1))
