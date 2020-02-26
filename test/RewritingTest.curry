@@ -299,6 +299,17 @@ porTRS = [(tOp (tConst "True") "or" varX, tConst "True"),
 porDefTreeTest :: IO ()
 porDefTreeTest = defTreeTest id porTRS
 
+-- f(True) -> True
+-- f(True) -> False
+-- f(False) -> True
+overlapLitFunTRS :: TRS String
+overlapLitFunTRS = [(TermCons "f" [tConst "True"], tConst "True"),
+                    (TermCons "f" [tConst "True"], tConst "False"),
+                    (TermCons "f" [tConst "False"], tConst "True")]
+
+overlapLitFunDefTreeTest :: IO ()
+overlapLitFunDefTreeTest = defTreeTest id overlapLitFunTRS
+
 -- -----------------------------------------------------------------------------
 -- Tests for narrowings on first-order terms
 -- -----------------------------------------------------------------------------
