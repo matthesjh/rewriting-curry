@@ -260,7 +260,7 @@ toGraph dt = fst (fst (runState (toGraph' dt) 0))
     newIdx = getS `bindS` \i -> putS (i + 1) `bindS_` returnS i
 
 --- Transforms a term into a string representation and surrounds the subterm at
---- the given position with the html `<u>` and `</u>` tags.
+--- the given position with the HTML `<u>` and `</u>` tags.
 showTermWithPos :: (f -> String) -> (Maybe Pos, Term f) -> String
 showTermWithPos s = showTP False
   where
