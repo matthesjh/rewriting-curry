@@ -16,13 +16,13 @@
   "license": "BSD-3-Clause",
   "licenseFile": "LICENSE.md",
   "dependencies": {
-    "abstract-curry": ">=2.0.0, <3.0.0",
-    "base": ">=1.0.0, <2.0.0",
+    "abstract-curry": "^2.0.0",
+    "base": "^1.0.0",
     "finite-map": ">=0.0.1, <0.0.2"
   },
   "compilerCompatibility": {
-    "kics2": ">=2.0.0, <3.0.0",
-    "pakcs": ">=2.0.0, <3.0.0"
+    "kics2": "^2.3.0",
+    "pakcs": "^2.3.0"
   },
   "exportedModules": [
     "Rewriting.CriticalPairs",
