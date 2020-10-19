@@ -6,7 +6,7 @@
 --- defines other structures, like term equations.
 ---
 --- @author Jan-Hendrik Matthes
---- @version February 2020
+--- @version October 2020
 --- @category algorithm
 --------------------------------------------------------------------------------
 
@@ -18,10 +18,12 @@ module Rewriting.Term
   , eqConsPattern
   ) where
 
-import Char           (isAlphaNum)
-import Data.FiniteMap (listToFM, lookupFM)
-import List           (intercalate, maximum, minimum, nub)
-import Maybe          (fromMaybe)
+import Prelude  hiding (lookup)
+
+import Char     (isAlphaNum)
+import Data.Map (fromList, lookup)
+import List     (intercalate, maximum, minimum, nub)
+import Maybe    (fromMaybe)
 
 -- -----------------------------------------------------------------------------
 -- Representation of first-order terms and term equations
@@ -164,9 +166,9 @@ minVarInTerm t = case tVars t of
 normalizeTerm :: Term f -> Term f
 normalizeTerm t = normalize t
   where
-    sub = listToFM (<) (zip (tVars t) (map TermVar [0..]))
+    sub = fromList (zip (tVars t) (map TermVar [0..]))
 
-    normalize t'@(TermVar v)  = fromMaybe t' (lookupFM sub v)
+    normalize t'@(TermVar v)  = fromMaybe t' (lookup v sub)
     normalize (TermCons c ts) = TermCons c (map normalize ts)
 
 --- Renames the variables in a term by the given number.

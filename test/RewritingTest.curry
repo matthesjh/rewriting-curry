@@ -2,13 +2,13 @@
 --- Module for testing the rewriting libraries.
 ---
 --- @author Jan-Hendrik Matthes
---- @version February 2020
+--- @version October 2020
 --- @category general
 --------------------------------------------------------------------------------
 
 module RewritingTest where
 
-import Data.FiniteMap             (eltsFM)
+import Data.Map                   (elems)
 
 import Rewriting.CriticalPairs
 import Rewriting.DefinitionalTree
@@ -512,4 +512,4 @@ readPeanoModuleTest = do
   res <- readCurryProgram "Peano"
   case res of
     Left _        -> putStrLn "Error while parsing the Curry file."
-    Right (fm, _) -> putStr (unlines (map (showTRS snd) (eltsFM fm)))
+    Right (fm, _) -> putStr (unlines (map (showTRS snd) (elems fm)))

@@ -2,7 +2,7 @@
 --- Library for representation of substitutions on first-order terms.
 ---
 --- @author Jan-Hendrik Matthes
---- @version February 2020
+--- @version October 2020
 --- @category algorithm
 --------------------------------------------------------------------------------
 
@@ -12,7 +12,9 @@ module Rewriting.Substitution
   , applySubstEq, applySubstEqs, restrictSubst, composeSubst
   ) where
 
-import Data.FiniteMap
+import Prelude        hiding (lookup)
+
+import Data.Map
 import Function       (both)
 import List           (intercalate)
 import Maybe          (fromMaybe)
@@ -25,7 +27,7 @@ import Rewriting.Term
 
 --- A substitution represented as a finite map from variables to terms and
 --- parameterized over the kind of function symbols, e.g., strings.
-type Subst f = FM VarIdx (Term f)
+type Subst f = Map VarIdx (Term f)
 
 -- -----------------------------------------------------------------------------
 -- Pretty-printing of substitutions on first-order terms
@@ -35,7 +37,7 @@ type Subst f = FM VarIdx (Term f)
 
 --- Transforms a substitution into a string representation.
 showSubst :: (f -> String) -> Subst f -> String
-showSubst s sub = "{" ++ intercalate "," (map showMapping (fmToList sub)) ++ "}"
+showSubst s sub = "{" ++ intercalate "," (map showMapping (toList sub)) ++ "}"
   where
     showMapping (v, t) = showVarIdx v ++ " \x21a6 " ++ showTerm s t
 
@@ -43,30 +45,26 @@ showSubst s sub = "{" ++ intercalate "," (map showMapping (fmToList sub)) ++ "}"
 -- Functions for substitutions on first-order terms
 -- -----------------------------------------------------------------------------
 
---- The irreflexive order predicate of a substitution.
-substOrder :: VarIdx -> VarIdx -> Bool
-substOrder = (<)
-
 --- The empty substitution.
 emptySubst :: Subst _
-emptySubst = emptyFM substOrder
+emptySubst = empty
 
 --- Extends a substitution with a new mapping from the given variable to the
 --- given term. An already existing mapping with the same variable will be
 --- thrown away.
 extendSubst :: Subst f -> VarIdx -> Term f -> Subst f
-extendSubst = addToFM
+extendSubst sub v t = insert v t sub
 
 --- Returns a substitution that contains all the mappings from the given list.
 --- For multiple mappings with the same variable, the last corresponding
 --- mapping of the given list is taken.
 listToSubst :: [(VarIdx, Term f)] -> Subst f
-listToSubst = listToFM substOrder
+listToSubst = fromList
 
 --- Returns the term mapped to the given variable in a substitution or
 --- `Nothing` if no such mapping exists.
 lookupSubst :: Subst f -> VarIdx -> Maybe (Term f)
-lookupSubst = lookupFM
+lookupSubst = flip lookup
 
 --- Applies a substitution to the given term.
 applySubst :: Subst f -> Term f -> Term f
@@ -92,4 +90,4 @@ restrictSubst sub vs =
 --- `sub(t) = phi(sigma(t))` for a term `t`. Mappings in the first substitution
 --- shadow those in the second.
 composeSubst :: Subst f -> Subst f -> Subst f
-composeSubst phi sigma = plusFM phi (mapFM (\_ t -> applySubst phi t) sigma)
+composeSubst phi sigma = union phi (mapWithKey (\_ t -> applySubst phi t) sigma)

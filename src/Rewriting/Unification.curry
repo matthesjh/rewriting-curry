@@ -5,7 +5,7 @@
 ---
 --- @author Michael Hanus, Jan-Hendrik Matthes, Jonas Oberschweiber,
 ---         Bjoern Peemoeller
---- @version February 2020
+--- @version October 2020
 --- @category algorithm
 --------------------------------------------------------------------------------
 
@@ -14,7 +14,9 @@ module Rewriting.Unification
   , showUnificationError, unify, unifiable
   ) where
 
-import Data.FiniteMap            (FM, addToFM, emptyFM, lookupFM)
+import Prelude                   hiding (lookup)
+
+import Data.Map                  (Map, empty, insert, lookup)
 import Either                    (isRight)
 import List                      (mapAccumL)
 
@@ -37,7 +39,7 @@ data RTerm f = Ref VarIdx | RTermVar VarIdx | RTermCons f [RTerm f]
 --- A reference table used to store the values referenced by `Ref` terms
 --- represented as a finite map from variables to `RTerm`s and parameterized
 --- over the kind of function symbols, e.g., strings.
-type RefTable f = FM VarIdx (RTerm f)
+type RefTable f = Map VarIdx (RTerm f)
 
 --- An `RTerm` equation represented as a pair of `RTerm`s and parameterized
 --- over the kind of function symbols, e.g., strings.
@@ -70,7 +72,7 @@ unifiable = isRight . unify
 --- Converts a list of term equations into a list of `RTerm` equations and
 --- places references into a fresh reference table.
 termEqsToREqs :: TermEqs f -> (RefTable f, REqs f)
-termEqsToREqs = mapAccumL termEqToREq (emptyFM (<))
+termEqsToREqs = mapAccumL termEqToREq empty
 
 --- Converts a term equation into an `RTerm` equation. The given reference table
 --- is used to store references.
@@ -82,7 +84,7 @@ termEqToREq rt (l, r) = let (rt1, l') = termToRTerm rt l
 --- Converts a term to an `RTerm`, placing all variable terms in the given
 --- reference table and replacing them by references inside the result `RTerm`.
 termToRTerm :: RefTable f -> Term f -> (RefTable f, RTerm f)
-termToRTerm rt (TermVar v)     = (addToFM rt v (RTermVar v), Ref v)
+termToRTerm rt (TermVar v)     = (insert v (RTermVar v) rt, Ref v)
 termToRTerm rt (TermCons c ts) = let (rt', ts') = mapAccumL termToRTerm rt ts
                                   in (rt', RTermCons c ts')
 
@@ -115,7 +117,7 @@ rTermToTerm rt (RTermCons c ts) = TermCons c (map (rTermToTerm rt) ts)
 --- same value for `RTermVar` and `RTermCons`. The given reference table is used
 --- for reference lookups.
 deref :: RefTable f -> RTerm f -> RTerm f
-deref rt (Ref i)           = case lookupFM rt i of
+deref rt (Ref i)           = case lookup i rt of
                                Nothing -> error ("deref: " ++ show i)
                                Just t  -> case t of
                                             Ref _         -> deref rt t
@@ -159,9 +161,9 @@ elim rt sub v t eqs
     Ref _         -> error "elim"
     -- Make sure to place a `Ref` in the reference table and substitution, not
     -- the `RTermVar` itself.
-    RTermVar v'   -> let rt' = addToFM rt v (Ref v')
+    RTermVar v'   -> let rt' = insert v (Ref v') rt
                       in unify' rt' ((RTermVar v, Ref v'):sub) eqs
-    RTermCons _ _ -> unify' (addToFM rt v t) ((RTermVar v, t):sub) eqs
+    RTermCons _ _ -> unify' (insert v t rt) ((RTermVar v, t):sub) eqs
 
 --- Checks whether the first term occurs as a subterm of the second term.
 dependsOn :: Eq f => RefTable f -> RTerm f -> RTerm f -> Bool

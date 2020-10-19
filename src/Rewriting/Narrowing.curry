@@ -3,7 +3,7 @@
 --- terms and representation of narrowing strategies.
 ---
 --- @author Jan-Hendrik Matthes
---- @version February 2020
+--- @version October 2020
 --- @category algorithm
 --------------------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ module Rewriting.Narrowing
   , dotifyNarrowingTree, writeNarrowingTree
   ) where
 
-import Data.FiniteMap             (eltsFM)
+import Data.Map                   (elems)
 import List                       (maximum)
 import Maybe                      (fromMaybe, mapMaybe)
 import State
@@ -207,7 +207,7 @@ narrowBy' v sub s trs n t
     combine (p, (_, r), sub') =
       let t' = applySubst sub' (replaceTerm t p r)
           rsub' = restrictSubst sub' (tVars t)
-          v' = case mapMaybe maxVarInTerm (eltsFM rsub') of
+          v' = case mapMaybe maxVarInTerm (elems rsub') of
                  []       -> v
                  vs@(_:_) -> maximum vs + 1
        in narrowBy' v' (composeSubst rsub' sub) s trs (n - 1) t'
@@ -239,7 +239,7 @@ narrowingBy' v sub s trs n t
       let t' = applySubst sub' (replaceTerm t p r)
           rsub' = restrictSubst sub' (tVars t)
           phi = composeSubst rsub' sub
-          v' = case mapMaybe maxVarInTerm (eltsFM rsub') of
+          v' = case mapMaybe maxVarInTerm (elems rsub') of
                  []       -> v
                  vs@(_:_) -> maximum vs + 1
        in map (NStep t p phi) (narrowingBy' v' phi s trs (n - 1) t')
@@ -271,7 +271,7 @@ narrowingTreeBy' v sub s trs n t | n <= 0    = NTree t []
       let t' = applySubst sub' (replaceTerm t p r)
           rsub' = restrictSubst sub' (tVars t)
           phi = composeSubst rsub' sub
-          v' = case mapMaybe maxVarInTerm (eltsFM rsub') of
+          v' = case mapMaybe maxVarInTerm (elems rsub') of
                  []       -> v
                  vs@(_:_) -> maximum vs + 1
        in (p, phi, narrowingTreeBy' v' phi s trs (n - 1) t')
@@ -322,7 +322,7 @@ solveEq' opts v sub s trs t@(TermCons _ ts) = case ts of
    solve (p, (_, r'), sub') =
      let t' = applySubst sub' (replaceTerm nt p r')
          rsub' = restrictSubst sub' (tVars nt)
-         v' = case mapMaybe maxVarInTerm (eltsFM rsub') of
+         v' = case mapMaybe maxVarInTerm (elems rsub') of
                 []       -> v
                 vs@(_:_) -> maximum vs + 1
       in solveEq' opts v' (composeSubst rsub' sub) s trs t'
